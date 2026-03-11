@@ -12,32 +12,64 @@ struct SmartAlarmScreen: View {
     @Binding var setting: AlarmSetting
     @Binding var confirmed: Bool
 
-    private let prayer: PrayerName = .ashar
     private let prayerTimeService = PrayerTimeService.shared
-    private let timeZone = TimeZone(identifier: "Asia/Jakarta")!
+
+    /// Detect the next upcoming prayer based on current time and location.
+    private var nextPrayer: PrayerName {
+        let location = LocationService.shared
+        let coords = Coordinates(latitude: location.latitude, longitude: location.longitude)
+        guard let times = prayerTimeService.getPrayerTimes(
+            coordinates: coords,
+            date: Date(),
+            method: location.recommendedMethod
+        ) else { return .dzuhur }
+
+        let now = Date()
+        let ordered: [(PrayerName, Date)] = [
+            (.subuh, times.subuh), (.dzuhur, times.dzuhur),
+            (.ashar, times.ashar), (.maghrib, times.maghrib), (.isya, times.isya)
+        ]
+        for (prayer, time) in ordered {
+            if now < time { return prayer }
+        }
+        // All passed today — default to Subuh (tomorrow's first)
+        return .subuh
+    }
 
     private var prayerTimes: HayyaPrayerTimes? {
-        prayerTimeService.getPrayerTimes(
-            coordinates: Coordinates(latitude: -6.2088, longitude: 106.8456),
+        let location = LocationService.shared
+        return prayerTimeService.getPrayerTimes(
+            coordinates: Coordinates(latitude: location.latitude, longitude: location.longitude),
             date: Date(),
-            method: .kemenagRI
+            method: location.recommendedMethod
         )
     }
 
+    private func azanDate(for prayer: PrayerName) -> Date? {
+        guard let times = prayerTimes else { return nil }
+        switch prayer {
+        case .subuh: return times.subuh
+        case .dzuhur: return times.dzuhur
+        case .ashar: return times.ashar
+        case .maghrib: return times.maghrib
+        case .isya: return times.isya
+        }
+    }
+
     private var azanTimeString: String {
-        guard let times = prayerTimes else { return "--:--" }
+        guard let date = azanDate(for: nextPrayer) else { return "--:--" }
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
-        f.timeZone = timeZone
-        return f.string(from: times.ashar)
+        f.timeZone = .current
+        return f.string(from: date)
     }
 
     private var alarmTimeString: String {
-        guard let times = prayerTimes else { return "--:--" }
+        guard let date = azanDate(for: nextPrayer) else { return "--:--" }
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
-        f.timeZone = timeZone
-        let adjusted = Calendar.current.date(byAdding: .minute, value: setting.offsetMinutes, to: times.ashar) ?? times.ashar
+        f.timeZone = .current
+        let adjusted = Calendar.current.date(byAdding: .minute, value: setting.offsetMinutes, to: date) ?? date
         return f.string(from: adjusted)
     }
 
@@ -65,7 +97,7 @@ struct SmartAlarmScreen: View {
                         .foregroundColor(Color(hex: 0x5B8C6F))
                         .tracking(1)
 
-                    Text("Ashar \u{00B7} \(azanTimeString)")
+                    Text("\(nextPrayer.rawValue) \u{00B7} \(azanTimeString)")
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(Color(hex: 0x2C2C2C))
 
@@ -95,7 +127,7 @@ struct SmartAlarmScreen: View {
                             confirmed = true
                         }
                     } label: {
-                        Text("Set Ashar alarm \u{2192}")
+                        Text("Set \(nextPrayer.rawValue) alarm \u{2192}")
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -305,7 +337,7 @@ struct SmartAlarmScreen: View {
                     .font(.system(size: 22, weight: .bold))
                     .foregroundColor(Color(hex: 0x2C2C2C))
 
-                Text("We've set smart defaults for your other 4 prayers based on your Ashar setup. Customize anytime.")
+                Text("We've set smart defaults for your other 4 prayers based on your \(nextPrayer.rawValue) setup. Customize anytime.")
                     .font(.system(size: 14))
                     .foregroundColor(Color(hex: 0x8E8E93))
                     .multilineTextAlignment(.center)
@@ -330,7 +362,7 @@ struct SmartAlarmScreen: View {
                                 .font(.system(size: 11))
                                 .foregroundColor(Color(hex: 0x8E8E93))
                             Spacer()
-                            if p == .ashar {
+                            if p == nextPrayer {
                                 Text("you set this")
                                     .font(.system(size: 9, weight: .medium))
                                     .foregroundColor(Color(hex: 0x5B8C6F))
@@ -362,8 +394,10 @@ struct SmartAlarmScreen: View {
         switch prayer {
         case .subuh: return .wakeUp
         case .maghrib: return .urgent
-        case .ashar: return setting.disruptionLevel
-        default: return setting.disruptionLevel
+        default:
+            // The prayer the user configured gets their chosen level
+            if prayer == nextPrayer { return setting.disruptionLevel }
+            return setting.disruptionLevel
         }
     }
 

@@ -18,8 +18,8 @@ struct OnboardingFlow: View {
     @State private var notificationsGranted = false
     @State private var selectedMethod: CalculationMethodType = .kemenagRI
 
-    // Smart alarm state
-    @State private var alarmSetting = AlarmSetting.defaultSetting(for: .ashar)
+    // Smart alarm state — uses next upcoming prayer, not a hardcoded prayer
+    @State private var alarmSetting = AlarmSetting.defaultSetting(for: .dzuhur)
     @State private var alarmConfirmed = false
 
     // Companion state
@@ -318,13 +318,13 @@ struct DashboardPreviewScreen: View {
     @State private var showFooter = false
 
     private let prayerTimeService = PrayerTimeService.shared
-    private let timeZone = TimeZone(identifier: "Asia/Jakarta")!
 
     private var prayerTimes: HayyaPrayerTimes? {
-        prayerTimeService.getPrayerTimes(
-            coordinates: .init(latitude: -6.2088, longitude: 106.8456),
+        let location = LocationService.shared
+        return prayerTimeService.getPrayerTimes(
+            coordinates: .init(latitude: location.latitude, longitude: location.longitude),
             date: Date(),
-            method: .kemenagRI
+            method: location.recommendedMethod
         )
     }
 
@@ -342,7 +342,7 @@ struct DashboardPreviewScreen: View {
         guard let d = date else { return "--:--" }
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
-        f.timeZone = timeZone
+        f.timeZone = .current
         return f.string(from: d)
     }
 
@@ -367,7 +367,7 @@ struct DashboardPreviewScreen: View {
                     HStack(spacing: 4) {
                         Image(systemName: "location.fill")
                             .font(.system(size: 9))
-                        Text("Jakarta")
+                        Text(LocationService.shared.locationName)
                             .font(.system(size: 11))
                     }
                     .foregroundColor(Color(hex: 0xB5B5BA))
@@ -415,7 +415,7 @@ struct DashboardPreviewScreen: View {
     private var dateString: String {
         let f = DateFormatter()
         f.dateFormat = "d MMMM yyyy"
-        f.timeZone = timeZone
+        f.timeZone = .current
         return f.string(from: Date())
     }
 

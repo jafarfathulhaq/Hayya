@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Adhan
 
 struct TogetherTabView: View {
     @State private var selectedInviteType: InviteType?
@@ -14,6 +15,7 @@ struct TogetherTabView: View {
     @State private var showPaywall = false
 
     private let cloudKit = CloudKitService.shared
+    private let prayerTimeService = PrayerTimeService.shared
 
     enum InviteType: String, CaseIterable, Identifiable {
         case spouse = "My spouse"
@@ -267,8 +269,8 @@ struct TogetherTabView: View {
             if cloudKit.isConnected {
                 Button {
                     Task {
-                        let currentPrayer = "Dzuhur" // TODO: Get actual current active prayer
-                        let sent = await cloudKit.sendReminder(prayer: currentPrayer)
+                        guard let activePrayer = currentActivePrayer else { return }
+                        let sent = await cloudKit.sendReminder(prayer: activePrayer)
                         if sent {
                             withAnimation { reminderSent = true }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -280,7 +282,7 @@ struct TogetherTabView: View {
                     HStack(spacing: 8) {
                         Image(systemName: reminderSent ? "checkmark.circle.fill" : "bell.fill")
                             .font(.system(size: 14))
-                        Text(reminderSent ? "Reminder sent" : "Send gentle reminder")
+                        Text(reminderSent ? "Reminder sent" : reminderButtonText)
                             .font(.system(size: 14, weight: .semibold))
                     }
                     .foregroundColor(.white)
@@ -290,9 +292,67 @@ struct TogetherTabView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
                 .buttonStyle(.plain)
-                .disabled(reminderSent)
+                .disabled(reminderSent || currentActivePrayer == nil)
                 .padding(.horizontal, 16)
             }
+        }
+    }
+
+    /// Detect the current active prayer based on prayer times.
+    private var currentActivePrayer: String? {
+        let location = LocationService.shared
+        let coords = Adhan.Coordinates(latitude: location.latitude, longitude: location.longitude)
+        guard let times = prayerTimeService.getPrayerTimes(
+            coordinates: coords, date: Date(), method: location.recommendedMethod
+        ) else { return nil }
+
+        let now = Date()
+        let orderedPrayers: [(String, Date)] = [
+            ("Subuh", times.subuh), ("Dzuhur", times.dzuhur), ("Ashar", times.ashar),
+            ("Maghrib", times.maghrib), ("Isya", times.isya)
+        ]
+
+        for (i, entry) in orderedPrayers.enumerated() {
+            let windowEnd = i + 1 < orderedPrayers.count ? orderedPrayers[i + 1].1 : Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: 1, to: now)!)
+            if now >= entry.1 && now < windowEnd {
+                return entry.0
+            }
+        }
+        return nil
+    }
+
+    /// Time-aware reminder copy per spec: plenty of time → gentle, <30min → urgent, <10min → critical.
+    private var reminderButtonText: String {
+        guard let activePrayer = currentActivePrayer else {
+            return "No active prayer"
+        }
+
+        let location = LocationService.shared
+        let coords = Adhan.Coordinates(latitude: location.latitude, longitude: location.longitude)
+        guard let times = prayerTimeService.getPrayerTimes(
+            coordinates: coords, date: Date(), method: location.recommendedMethod
+        ) else { return "Send gentle reminder" }
+
+        let orderedPrayers: [(String, Date)] = [
+            ("Subuh", times.subuh), ("Dzuhur", times.dzuhur), ("Ashar", times.ashar),
+            ("Maghrib", times.maghrib), ("Isya", times.isya)
+        ]
+
+        guard let idx = orderedPrayers.firstIndex(where: { $0.0 == activePrayer }) else {
+            return "Send gentle reminder"
+        }
+
+        let windowEnd = idx + 1 < orderedPrayers.count
+            ? orderedPrayers[idx + 1].1
+            : Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: 1, to: Date())!)
+        let minutesLeft = Calendar.current.dateComponents([.minute], from: Date(), to: windowEnd).minute ?? 60
+
+        if minutesLeft < 10 {
+            return "Remind now \u{2022} \(activePrayer) ending soon!"
+        } else if minutesLeft < 30 {
+            return "Remind for \(activePrayer) \u{2022} \(minutesLeft)min left"
+        } else {
+            return "Send gentle reminder for \(activePrayer)"
         }
     }
 

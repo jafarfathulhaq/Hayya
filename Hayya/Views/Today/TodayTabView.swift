@@ -14,7 +14,7 @@ struct TodayTabView: View {
     private var dateFormatter: DateFormatter {
         let f = DateFormatter()
         f.dateFormat = "d MMMM yyyy"
-        f.timeZone = TimeZone(identifier: "Asia/Jakarta")!
+        f.timeZone = .current
         return f
     }
 
@@ -72,7 +72,7 @@ struct TodayTabView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "location.fill")
                             .font(.system(size: 9))
-                        Text("Jakarta")
+                        Text(LocationService.shared.locationName)
                             .font(.system(size: 11))
                     }
                     .foregroundColor(Color(hex: 0xB5B5BA))

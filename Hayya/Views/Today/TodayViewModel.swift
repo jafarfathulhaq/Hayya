@@ -32,14 +32,11 @@ final class TodayViewModel {
 
     // MARK: - Init
 
-    init(
-        coordinates: Coordinates = Coordinates(latitude: -6.2088, longitude: 106.8456),
-        method: CalculationMethodType = .kemenagRI,
-        timeZone: TimeZone = TimeZone(identifier: "Asia/Jakarta")!
-    ) {
-        self.coordinates = coordinates
-        self.method = method
-        self.timeZone = timeZone
+    init() {
+        let location = LocationService.shared
+        self.coordinates = Coordinates(latitude: location.latitude, longitude: location.longitude)
+        self.method = location.recommendedMethod
+        self.timeZone = .current
         loadTodayPrayers()
     }
 
