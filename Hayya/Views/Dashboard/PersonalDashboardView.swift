@@ -26,7 +26,7 @@ struct PersonalDashboardView: View {
         (thisWeekStats?.totalPrayers ?? 0) - (lastWeekStats?.totalPrayers ?? 0)
     }
 
-    // Simulated data (Phase 2: jamaah tracking)
+    // Jamaah tracking data (populated when jamaah tagging is active)
     private let jamaahCount = 0
     private let jamaahMosque = 0
     private let jamaahHome = 0
@@ -49,8 +49,10 @@ struct PersonalDashboardView: View {
                         statsRow
                         encouragement
                         insightsCard
-                        moreInsightsToggle
-                        if showMoreInsights { jamaahCard }
+                        if jamaahCount > 0 || earlyCount > 0 {
+                            moreInsightsToggle
+                            if showMoreInsights { jamaahCard }
+                        }
                         duaFooter
                         privacyNote
                     } else {

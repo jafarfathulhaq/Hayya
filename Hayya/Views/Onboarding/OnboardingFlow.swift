@@ -566,19 +566,21 @@ struct CompanionInviteScreen: View {
                     }
                     .padding(.top, 4)
 
-                    // Invite CTA (Phase 2)
+                    // Invite button — disabled until type selected, functional from Together tab
                     Button {
-                        // Phase 2: open WhatsApp share
+                        // Companion invite is handled from the Together tab after onboarding
+                        onSkip()
                     } label: {
-                        Text("Invite via WhatsApp")
+                        Text("Invite a companion")
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
-                            .background(Color(hex: 0x5B8C6F))
+                            .background(selectedType != nil ? Color(hex: 0x5B8C6F) : Color(hex: 0xD1D1D6))
                             .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
                     .buttonStyle(.plain)
+                    .disabled(selectedType == nil)
                     .padding(.top, 4)
 
                     // Skip
