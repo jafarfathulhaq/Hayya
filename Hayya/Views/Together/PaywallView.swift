@@ -16,8 +16,8 @@ struct PaywallView: View {
     private let subscription = SubscriptionService.shared
 
     // Legal page URLs — required by Apple for subscription paywalls
-    private let privacyPolicyURL = URL(string: "https://jafarfh.github.io/hayya/privacy-policy.html")!
-    private let termsOfServiceURL = URL(string: "https://jafarfh.github.io/hayya/terms-of-service.html")!
+    private let privacyPolicyURL = URL(string: "https://jafarfh.com/Hayya/privacy-policy.html")!
+    private let termsOfServiceURL = URL(string: "https://jafarfh.com/Hayya/terms-of-service.html")!
 
     var body: some View {
         ZStack {

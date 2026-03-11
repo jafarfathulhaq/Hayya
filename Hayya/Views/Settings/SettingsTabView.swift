@@ -28,8 +28,8 @@ struct SettingsTabView: View {
     private let prayerTimeService = PrayerTimeService.shared
 
     // Legal page URLs — update the base URL once GitHub Pages is deployed
-    private let privacyPolicyURL = URL(string: "https://jafarfh.github.io/hayya/privacy-policy.html")!
-    private let termsOfServiceURL = URL(string: "https://jafarfh.github.io/hayya/terms-of-service.html")!
+    private let privacyPolicyURL = URL(string: "https://jafarfh.com/Hayya/privacy-policy.html")!
+    private let termsOfServiceURL = URL(string: "https://jafarfh.com/Hayya/terms-of-service.html")!
 
     private var locationCoords: Coordinates {
         let loc = LocationService.shared
