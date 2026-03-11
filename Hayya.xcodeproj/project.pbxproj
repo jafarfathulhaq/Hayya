@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		94EA14F12F60BB6900388DC9 /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = 94EA14F02F60BB6900388DC9 /* Adhan */; };
+		A1D6E0072F61000700000007 /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = A1D6E0082F61000800000008 /* Adhan */; };
+		A1D6E00F2F61000F0000000F /* HayyaWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A1D6E0012F61000100000001 /* HayyaWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,12 +27,34 @@
 			remoteGlobalIDString = 9498BC482F60033D00319382;
 			remoteInfo = Hayya;
 		};
+		A1D6E00C2F61000C0000000C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9498BC412F60033D00319382 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1D6E0062F61000600000006;
+			remoteInfo = HayyaWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A1D6E00E2F61000E0000000E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A1D6E00F2F61000F0000000F /* HayyaWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		9498BC492F60033D00319382 /* Hayya.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hayya.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9498BC582F60034000319382 /* HayyaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HayyaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9498BC622F60034000319382 /* HayyaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HayyaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1D6E0012F61000100000001 /* HayyaWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HayyaWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -47,6 +71,11 @@
 		9498BC652F60034000319382 /* HayyaUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = HayyaUITests;
+			sourceTree = "<group>";
+		};
+		A1D6E0022F61000200000002 /* HayyaWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = HayyaWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -74,6 +103,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A1D6E0042F61000400000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1D6E0072F61000700000007 /* Adhan in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -81,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				9498BC4B2F60033D00319382 /* Hayya */,
+				A1D6E0022F61000200000002 /* HayyaWidget */,
 				9498BC5B2F60034000319382 /* HayyaTests */,
 				9498BC652F60034000319382 /* HayyaUITests */,
 				9498BC4A2F60033D00319382 /* Products */,
@@ -93,6 +131,7 @@
 				9498BC492F60033D00319382 /* Hayya.app */,
 				9498BC582F60034000319382 /* HayyaTests.xctest */,
 				9498BC622F60034000319382 /* HayyaUITests.xctest */,
+				A1D6E0012F61000100000001 /* HayyaWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,10 +146,12 @@
 				9498BC452F60033D00319382 /* Sources */,
 				9498BC462F60033D00319382 /* Frameworks */,
 				9498BC472F60033D00319382 /* Resources */,
+				A1D6E00E2F61000E0000000E /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A1D6E00D2F61000D0000000D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9498BC4B2F60033D00319382 /* Hayya */,
@@ -169,6 +210,29 @@
 			productReference = 9498BC622F60034000319382 /* HayyaUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		A1D6E0062F61000600000006 /* HayyaWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1D6E00B2F61000B0000000B /* Build configuration list for PBXNativeTarget "HayyaWidgetExtension" */;
+			buildPhases = (
+				A1D6E0032F61000300000003 /* Sources */,
+				A1D6E0042F61000400000004 /* Frameworks */,
+				A1D6E0052F61000500000005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A1D6E0022F61000200000002 /* HayyaWidget */,
+			);
+			name = HayyaWidgetExtension;
+			packageProductDependencies = (
+				A1D6E0082F61000800000008 /* Adhan */,
+			);
+			productName = HayyaWidgetExtension;
+			productReference = A1D6E0012F61000100000001 /* HayyaWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -189,6 +253,9 @@
 					9498BC612F60034000319382 = {
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = 9498BC482F60033D00319382;
+					};
+					A1D6E0062F61000600000006 = {
+						CreatedOnToolsVersion = 26.3;
 					};
 				};
 			};
@@ -212,6 +279,7 @@
 				9498BC482F60033D00319382 /* Hayya */,
 				9498BC572F60034000319382 /* HayyaTests */,
 				9498BC612F60034000319382 /* HayyaUITests */,
+				A1D6E0062F61000600000006 /* HayyaWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -232,6 +300,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9498BC602F60034000319382 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1D6E0052F61000500000005 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -262,6 +337,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A1D6E0032F61000300000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -274,6 +356,11 @@
 			isa = PBXTargetDependency;
 			target = 9498BC482F60033D00319382 /* Hayya */;
 			targetProxy = 9498BC632F60034000319382 /* PBXContainerItemProxy */;
+		};
+		A1D6E00D2F61000D0000000D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1D6E0062F61000600000006 /* HayyaWidgetExtension */;
+			targetProxy = A1D6E00C2F61000C0000000C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -404,6 +491,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Hayya/Hayya.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WMXNR469QP;
@@ -419,7 +507,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hayya.Hayya;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jafarfh.Hayya;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -436,6 +524,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Hayya/Hayya.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WMXNR469QP;
@@ -451,7 +540,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hayya.Hayya;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jafarfh.Hayya;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -473,7 +562,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hayya.HayyaTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jafarfh.HayyaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -495,7 +584,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hayya.HayyaTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jafarfh.HayyaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -515,7 +604,7 @@
 				DEVELOPMENT_TEAM = WMXNR469QP;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hayya.HayyaUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jafarfh.HayyaUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -535,7 +624,7 @@
 				DEVELOPMENT_TEAM = WMXNR469QP;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hayya.HayyaUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jafarfh.HayyaUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -544,6 +633,68 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Hayya;
+			};
+			name = Release;
+		};
+		A1D6E0092F61000900000009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = HayyaWidget/HayyaWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WMXNR469QP;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HayyaWidget-Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HayyaWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jafarfh.Hayya.HayyaWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1D6E00A2F61000A0000000A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = HayyaWidget/HayyaWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WMXNR469QP;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HayyaWidget-Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HayyaWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jafarfh.Hayya.HayyaWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -586,6 +737,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A1D6E00B2F61000B0000000B /* Build configuration list for PBXNativeTarget "HayyaWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1D6E0092F61000900000009 /* Debug */,
+				A1D6E00A2F61000A0000000A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -601,6 +761,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		94EA14F02F60BB6900388DC9 /* Adhan */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 94EA14EF2F60BB6900388DC9 /* XCRemoteSwiftPackageReference "adhan-swift" */;
+			productName = Adhan;
+		};
+		A1D6E0082F61000800000008 /* Adhan */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 94EA14EF2F60BB6900388DC9 /* XCRemoteSwiftPackageReference "adhan-swift" */;
 			productName = Adhan;

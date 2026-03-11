@@ -8,66 +8,68 @@ Core positioning: personal companion first, shared accountability second.
 
 ### Stack
 - **Language:** Swift 5.9+
-- **UI:** SwiftUI (iOS 17+ minimum deployment target)
+- **UI:** SwiftUI (iOS 26+ deployment target, Xcode 26.3)
 - **Storage:** SwiftData (local), CloudKit (Companion sync only)
-- **Prayer Times:** Adhan-Swift (SPM: https://github.com/batoulapps/adhan-swift)
-- **Widgets:** WidgetKit + App Groups shared container
-- **Subscriptions:** StoreKit 2
+- **Prayer Times:** Adhan-Swift 1.4.0 (SPM: https://github.com/batoulapps/adhan-swift)
+- **Widgets:** WidgetKit (Small widget implemented, App Groups for Phase 2)
+- **Subscriptions:** StoreKit 2 (Phase 2)
 - **Notifications:** UNUserNotificationCenter + Critical Alerts (Subuh Mode)
+- **Bundle ID:** com.jafarfh.Hayya
+- **Dev Team:** WMXNR469QP (free provisioning)
+- **Concurrency:** MainActor default isolation, nonisolated Codable conformance
 
 ### Project Structure
 ```
 Hayya/
 ├── App/
-│   ├── HayyaApp.swift                 # Entry point
-│   └── ContentView.swift              # Tab bar container
+│   ├── HayyaApp.swift                 # Entry point, ModelContainer, notifications
+│   └── ContentView.swift              # Floating pill tab bar (5 tabs)
 ├── Models/
-│   ├── PrayerRecord.swift             # SwiftData: prayer check-in records
-│   ├── UserSettings.swift             # SwiftData: all user preferences
-│   ├── CompanionConnection.swift      # CloudKit: partner connections
+│   ├── PrayerRecord.swift             # SwiftData: PrayerName, PrayerStatus, DaySummary
+│   ├── UserSettings.swift             # SwiftData: AlarmSetting (nonisolated Codable)
 │   └── SpiritualContent.swift         # Hadith & encouragement data
 ├── Services/
-│   ├── PrayerTimeService.swift        # Adhan-Swift wrapper, calculation methods
+│   ├── PrayerTimeService.swift        # Adhan-Swift wrapper, 19 calculation methods
 │   ├── NotificationService.swift      # Alarm scheduling, disruption levels
-│   ├── StreakService.swift             # Streak calculation, protected days, recovery
-│   ├── CloudKitService.swift          # Companion sync (Phase 2)
-│   └── LocationService.swift          # GPS, auto-detect calculation method
+│   ├── StreakService.swift             # WeeklyStats, StreakInfo, dot grid builder
+│   └── LocationService.swift          # GPS, MKLocalSearch geocoding, widget defaults
 ├── Views/
 │   ├── Today/
-│   │   ├── TodayTabView.swift         # Prayer cards, stats bar, Your Journey card
+│   │   ├── TodayTabView.swift         # Prayer cards, streak badge, journey card
+│   │   ├── TodayViewModel.swift       # Prayer state machine, check-in logic
 │   │   ├── PrayerCardView.swift       # Individual prayer card (5 states)
 │   │   └── SpiritualToastView.swift   # Non-blocking hadith toast after check-in
 │   ├── PrayerMoment/
 │   │   ├── PrayerMomentView.swift     # Notification landing screen (all 5 prayers)
 │   │   ├── SubuhModeView.swift        # Full dark alarm takeover
-│   │   └── TemporalTheme.swift        # Color palettes per prayer time
+│   │   └── TemporalTheme.swift        # Color palettes + Color(hex:) extension
 │   ├── Dashboard/
-│   │   ├── PersonalDashboardView.swift # Days protected, dot grid, encouragement
+│   │   ├── PersonalDashboardView.swift # Wired to SwiftData via StreakService
 │   │   └── WeeklyDotGrid.swift        # 5×7 prayer visualization
 │   ├── Together/
-│   │   ├── TogetherTabView.swift      # Empty/connected/weekly states
-│   │   ├── PartnerCardView.swift      # Partner profile + prayer dots
-│   │   └── ReminderView.swift         # Time-aware reminder system
+│   │   └── TogetherTabView.swift      # Placeholder (Phase 2: CloudKit)
 │   ├── Alarms/
-│   │   ├── AlarmTabView.swift         # Overview strip + prayer accordion
-│   │   ├── IntensityBarsView.swift    # 4-level disruption visual
-│   │   └── SoundPickerView.swift      # Tone + azan grouped picker
+│   │   ├── AlarmTabView.swift         # SwiftData persistence, LocationService
+│   │   ├── AlarmEditorSheet.swift     # Per-prayer editor (85% sheet)
+│   │   └── IntensityBarsView.swift    # 4-level disruption visual
 │   ├── Settings/
 │   │   ├── SettingsTabView.swift      # iOS-style grouped sections
-│   │   ├── CalculationMethodPicker.swift # 19 methods + custom angles
-│   │   └── CompanionPrivacyView.swift # Hide prayers, pause, disconnect
+│   │   └── CalculationMethodPicker.swift # 19 methods + custom angles
 │   └── Onboarding/
 │       ├── OnboardingFlow.swift       # 6-screen flow
 │       ├── AlarmPersonalityView.swift  # 2-question quiz
 │       └── QuickSetupView.swift       # Location + method + notifications
-├── Widgets/
-│   ├── SmallWidget.swift              # Personal prayer dots
-│   ├── MediumWidget.swift             # Couple "Together" widget
-│   └── LargeWidget.swift              # Full "Today" widget
 └── Resources/
     ├── SpiritualContent.json          # 50+ hadith, categorized by prayer
-    ├── CalculationMethods.json        # 19 methods with angles
-    └── Sounds/                        # Alarm tones + azan recordings
+    └── CalculationMethods.json        # 19 methods with angles
+
+HayyaWidget/                           # Widget Extension target
+├── HayyaWidgetBundle.swift            # @main widget bundle entry point
+├── HayyaPrayerWidget.swift            # Timeline provider + widget config
+├── SmallPrayerWidgetView.swift        # Small widget: next prayer + 5 dots
+└── WidgetDataProvider.swift           # Lightweight Adhan-Swift wrapper
+
+HayyaWidget-Info.plist                 # NSExtension dictionary for widget
 ```
 
 ## Design System
@@ -184,14 +186,31 @@ Auto-detected by country. All computed via Adhan-Swift.
 5. Dashboard Preview — prayer cards ready, staggered animation
 6. Companion Invite — optional, skippable, hadith about congregation
 
-## Phase 1 Scope (No Developer Account Needed)
-Everything local: prayer time calculation, Today tab, check-in flow, qadha,
-Subuh Mode, Prayer Moments (all 5 themes), personal dashboard, alarm settings,
-settings (19 methods), onboarding, widgets (Small only without CloudKit).
+## Phase 1 Status (Complete)
+All Phase 1 features implemented and running on device:
+- Prayer time calculation (Adhan-Swift, 19 methods, auto-detect by country)
+- Today tab with prayer cards, check-in, qadha recovery, streak badge
+- Personal dashboard wired to SwiftData (WeeklyStats, dot grid, insights)
+- Alarm settings with per-prayer editor, persisted to SwiftData
+- Settings tab with calculation method picker
+- Onboarding flow (6 screens)
+- Prayer Moment views with temporal themes (all 5 prayers)
+- Subuh Mode (full dark alarm takeover)
+- Small widget (prayer times + next prayer highlight)
+- Notifications via UNUserNotificationCenter
+- Location via CoreLocation + MKLocalSearch geocoding (iOS 26 API)
 
 ## Phase 2 Scope (Requires Developer Account)
 CloudKit: Companion sync, Together tab connected state, reminders,
-"Prayed Together" detection, Medium + Large widgets, StoreKit subscriptions.
+"Prayed Together" detection, Medium + Large widgets, StoreKit subscriptions,
+App Groups for widget check-in data sharing.
+
+## Technical Notes
+- **MainActor default isolation:** Build flag `-default-isolation MainActor`. AlarmSetting uses explicit `nonisolated init(from:)` / `nonisolated func encode(to:)` for Codable.
+- **#Predicate limitation:** Can't compare enums in SwiftData predicates. StreakService fetches all records and filters in Swift.
+- **iOS 26 geocoding:** CLGeocoder deprecated. Uses MKLocalSearch + MKAddressRepresentations (cityName, regionName, region.identifier).
+- **Widget data sharing:** Currently uses UserDefaults.standard. When App Groups configured, switch to `UserDefaults(suiteName: "group.com.jafarfh.hayya.shared")` — marked with TODO comments in LocationService and HayyaPrayerWidget.
+- **Free provisioning:** 7-day signing expiry, no push notifications, no App Groups, no Critical Alerts. Bundle ID must be unique (com.jafarfh.Hayya).
 
 ## Naming Conventions
 - Feature: "Companion" (not Halaqah)

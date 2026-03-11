@@ -1,0 +1,148 @@
+{
+  "checkInMessages": {
+    "subuh": [
+      {
+        "message": "You are now under Allah's protection for the rest of the day.",
+        "source": "Sahih Muslim"
+      },
+      {
+        "message": "Whoever prays the dawn prayer in congregation, it is as if he had prayed the whole night.",
+        "source": "Sahih Muslim"
+      },
+      {
+        "message": "The two rak'ahs of Fajr are better than the world and all that is in it.",
+        "source": "Sahih Muslim"
+      },
+      {
+        "message": "Angels come to you in succession by night and day. They meet at Fajr and Asr prayers.",
+        "source": "Sahih Bukhari"
+      },
+      {
+        "message": "Whoever prays Fajr is under the protection of Allah. So do not fall short with regard to the rights of Allah.",
+        "source": "Sahih Muslim"
+      }
+    ],
+    "dzuhur": [
+      {
+        "message": "The most beloved of deeds to Allah are those that are most consistent, even if they are small.",
+        "source": "Sahih Bukhari & Muslim"
+      },
+      {
+        "message": "Between every two adhans there is a prayer for whoever wishes to pray.",
+        "source": "Sahih Bukhari & Muslim"
+      },
+      {
+        "message": "Whoever prays four rak'ahs before Dhuhr and four after, Allah will forbid the Fire from touching him.",
+        "source": "Sunan An-Nasa'i"
+      },
+      {
+        "message": "Prayer is the pillar of the religion. Whoever establishes it has established the religion.",
+        "source": "Musnad Ahmad"
+      }
+    ],
+    "ashar": [
+      {
+        "message": "Whoever misses the Asr prayer, it is as if he lost his family and his wealth.",
+        "source": "Sahih Bukhari"
+      },
+      {
+        "message": "Angels come to you in succession by night and day. They meet at Fajr and Asr prayers.",
+        "source": "Sahih Bukhari"
+      },
+      {
+        "message": "Whoever guards his Fajr and Asr prayers will enter Paradise.",
+        "source": "Sahih Bukhari & Muslim"
+      },
+      {
+        "message": "There is no prayer heavier upon the hypocrites than the Fajr and Isha prayers.",
+        "source": "Sahih Bukhari & Muslim"
+      }
+    ],
+    "maghrib": [
+      {
+        "message": "Hasten to break the fast, for that is one of the practices of the people of goodness.",
+        "source": "Musnad Ahmad"
+      },
+      {
+        "message": "Pray Maghrib when the sun sets, and do not delay it until the stars appear.",
+        "source": "Sahih Ibn Hibban"
+      },
+      {
+        "message": "Whoever prays the five daily prayers, Allah will prepare for him light, proof, and salvation.",
+        "source": "Musnad Ahmad"
+      }
+    ],
+    "isya": [
+      {
+        "message": "Whoever prays Isha in congregation, it is as if he stood for half the night.",
+        "source": "Sahih Muslim"
+      },
+      {
+        "message": "Rest well. You finished the day in prayer.",
+        "source": "Sunan An-Nasa'i"
+      },
+      {
+        "message": "Whoever prays Isha and Fajr in congregation, it is as if he stood the entire night in prayer.",
+        "source": "Sahih Muslim"
+      },
+      {
+        "message": "The last prayer the Prophet left before passing was the Isha prayer.",
+        "source": "Sahih Bukhari"
+      }
+    ]
+  },
+  "qadhaMessages": [
+    {
+      "message": "The best of sinners are those who repent. Recovering a prayer is an act of faith, not failure.",
+      "source": "Sunan At-Tirmidhi"
+    },
+    {
+      "message": "Whoever oversleeps and misses a prayer, let him pray it when he remembers, for that is its time.",
+      "source": "Sahih Bukhari & Muslim"
+    },
+    {
+      "message": "Allah loves a servant who, when he does a good deed, does it well.",
+      "source": "Al-Bayhaqi"
+    },
+    {
+      "message": "Coming back is what matters. Every recovered prayer is a step closer to Allah.",
+      "source": "Hayya"
+    }
+  ],
+  "celebrationMessages": [
+    {
+      "message": "Whoever prays the five daily prayers, Allah will prepare for him light, proof, and salvation on the Day of Resurrection.",
+      "source": "Musnad Ahmad"
+    },
+    {
+      "message": "Alhamdulillah. All five prayers completed today. That is true success.",
+      "source": "Hayya"
+    },
+    {
+      "message": "The five daily prayers and Friday prayer to the next are expiation for what is between them.",
+      "source": "Sahih Muslim"
+    }
+  ],
+  "streakMessages": [
+    {
+      "message": "Consistency is beloved to Allah. Keep going.",
+      "source": "Sahih Bukhari & Muslim"
+    },
+    {
+      "message": "Your prayer streak is a sign of your heart's attachment to Allah.",
+      "source": "Hayya"
+    }
+  ],
+  "encouragement": {
+    "comeback": [
+      "Every new prayer is a fresh start. Allah loves those who keep returning.",
+      "Missing a prayer doesn't define you. Praying the next one does.",
+      "The door of repentance is always open. Just start with the next prayer."
+    ],
+    "progress": [
+      "You're building a beautiful habit. Keep going.",
+      "Each prayer strengthens your connection with Allah.",
+      "Small steps lead to great journeys. You're doing well."
+    ]
+  }
+}
