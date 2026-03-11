@@ -15,6 +15,10 @@ struct PaywallView: View {
 
     private let subscription = SubscriptionService.shared
 
+    // Legal page URLs — required by Apple for subscription paywalls
+    private let privacyPolicyURL = URL(string: "https://jafarfh.github.io/hayya/privacy-policy.html")!
+    private let termsOfServiceURL = URL(string: "https://jafarfh.github.io/hayya/terms-of-service.html")!
+
     var body: some View {
         ZStack {
             // Dimmed background
@@ -106,13 +110,29 @@ struct PaywallView: View {
                 .disabled(isPurchasing)
                 .padding(.horizontal, 20)
 
-                // Restore + terms
-                HStack(spacing: 16) {
+                // Restore + terms + privacy
+                VStack(spacing: 6) {
                     Button("Restore Purchases") {
                         Task { await subscription.restorePurchases() }
                     }
                     .font(.system(size: 11))
                     .foregroundColor(Color(hex: 0x8E8E93))
+
+                    HStack(spacing: 4) {
+                        Link("Terms of Service", destination: termsOfServiceURL)
+                        Text("\u{00B7}")
+                            .foregroundColor(Color(hex: 0xB5B5BA))
+                        Link("Privacy Policy", destination: privacyPolicyURL)
+                    }
+                    .font(.system(size: 10))
+                    .foregroundColor(Color(hex: 0xB5B5BA))
+
+                    Text("Subscriptions auto-renew unless cancelled 24h before the period ends. Manage in Settings > Apple ID.")
+                        .font(.system(size: 9))
+                        .foregroundColor(Color(hex: 0xB5B5BA))
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(2)
+                        .padding(.horizontal, 16)
                 }
                 .padding(.top, 8)
                 .padding(.bottom, 20)

@@ -9,8 +9,7 @@ import SwiftUI
 import Adhan
 
 struct SettingsTabView: View {
-    @State private var location = "Jakarta, Indonesia"
-    @State private var calcMethod: CalculationMethodType = .kemenagRI
+    @State private var calcMethod: CalculationMethodType = LocationService.shared.recommendedMethod
     @State private var madhab = "Shafi'i"
     @State private var appearance = "system"
     @State private var customFajrAngle: Double = 20.0
@@ -27,11 +26,19 @@ struct SettingsTabView: View {
     ]
 
     private let prayerTimeService = PrayerTimeService.shared
-    private let jakartaCoords = Coordinates(latitude: -6.2088, longitude: 106.8456)
+
+    // Legal page URLs — update the base URL once GitHub Pages is deployed
+    private let privacyPolicyURL = URL(string: "https://jafarfh.github.io/hayya/privacy-policy.html")!
+    private let termsOfServiceURL = URL(string: "https://jafarfh.github.io/hayya/terms-of-service.html")!
+
+    private var locationCoords: Coordinates {
+        let loc = LocationService.shared
+        return Coordinates(latitude: loc.latitude, longitude: loc.longitude)
+    }
 
     private var todayTimes: HayyaPrayerTimes? {
         prayerTimeService.getPrayerTimes(
-            coordinates: jakartaCoords,
+            coordinates: locationCoords,
             date: Date(),
             method: calcMethod,
             customFajrAngle: calcMethod == .custom ? customFajrAngle : nil,
@@ -42,7 +49,7 @@ struct SettingsTabView: View {
     private var timeFormatter: DateFormatter {
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
-        f.timeZone = TimeZone(identifier: "Asia/Jakarta")!
+        f.timeZone = .current
         return f
     }
 
@@ -89,7 +96,7 @@ struct SettingsTabView: View {
         VStack(spacing: 0) {
             sectionHeader("Prayer")
             groupCard {
-                settingsRow(icon: "📍", label: "Location", value: location)
+                settingsRow(icon: "📍", label: "Location", value: LocationService.shared.locationName)
                 dividerLine
                 settingsRow(icon: "🧭", label: "Calculation Method", value: calcMethod.rawValue) {
                     withAnimation(.easeInOut(duration: 0.2)) { showCalcPicker.toggle() }
@@ -402,13 +409,21 @@ struct SettingsTabView: View {
             groupCard {
                 settingsRow(icon: "❓", label: "Help & FAQ", chevron: true)
                 dividerLine
-                settingsRow(icon: "💬", label: "Send Feedback", chevron: true)
+                settingsRow(icon: "💬", label: "Send Feedback", chevron: true) {
+                    if let url = URL(string: "mailto:hayya@jafarfh.com") {
+                        UIApplication.shared.open(url)
+                    }
+                }
                 dividerLine
                 settingsRow(icon: "⭐", label: "Rate Hayya", chevron: true)
                 dividerLine
-                settingsRow(icon: "📋", label: "Privacy Policy", chevron: true)
+                settingsRow(icon: "📋", label: "Privacy Policy", chevron: true) {
+                    UIApplication.shared.open(privacyPolicyURL)
+                }
                 dividerLine
-                settingsRow(icon: "📄", label: "Terms of Service", chevron: true)
+                settingsRow(icon: "📄", label: "Terms of Service", chevron: true) {
+                    UIApplication.shared.open(termsOfServiceURL)
+                }
             }
         }
     }
