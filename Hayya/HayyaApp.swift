@@ -39,6 +39,12 @@ struct HayyaApp: App {
                         scheduleDailyNotifications()
                         LocationService.shared.writeToWidgetDefaults()
                     }
+                    .task {
+                        // Refresh critical alert status + CloudKit user ID on launch
+                        await NotificationService.shared.refreshCriticalAlertStatus()
+                        await CloudKitService.shared.fetchCurrentUserID()
+                        await CloudKitService.shared.processOfflineQueue()
+                    }
             } else {
                 OnboardingFlow(isOnboardingComplete: $isOnboardingComplete)
             }

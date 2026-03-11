@@ -12,5 +12,7 @@ import SwiftUI
 struct HayyaWidgetBundle: WidgetBundle {
     var body: some Widget {
         HayyaPrayerWidget()
+        HayyaMediumWidget()
+        HayyaLargeWidget()
     }
 }

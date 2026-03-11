@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import WidgetKit
 import Adhan
 
 @Observable
@@ -156,6 +157,9 @@ final class TodayViewModel {
         // Persist to SwiftData
         persistRecord(prayer: prayer, status: .done, azanTime: prayerStates[index].azanTime)
 
+        // Sync to widget via App Groups
+        writeCheckInStatusToWidget()
+
         showToast(for: prayer)
         checkMilestone()
     }
@@ -172,6 +176,9 @@ final class TodayViewModel {
         }
 
         persistRecord(prayer: prayer, status: .qadha, azanTime: prayerStates[index].azanTime)
+
+        // Sync to widget via App Groups
+        writeCheckInStatusToWidget()
 
         showQadhaToast(for: prayer)
         checkMilestone()
@@ -228,6 +235,26 @@ final class TodayViewModel {
                 }
             }
         }
+    }
+
+    // MARK: - Widget Sync
+
+    /// Write current check-in status to App Groups shared UserDefaults for widget.
+    /// Stores a dictionary of prayer name → status raw value for today.
+    private func writeCheckInStatusToWidget() {
+        guard let defaults = UserDefaults(suiteName: "group.com.jafarfh.hayya.shared") else { return }
+
+        var statusDict: [String: String] = [:]
+        for state in prayerStates {
+            statusDict[state.prayer.rawValue] = state.status.rawValue
+        }
+
+        let todayKey = Calendar.current.startOfDay(for: Date()).timeIntervalSince1970
+        defaults.set(statusDict, forKey: "widget_prayerStatus")
+        defaults.set(todayKey, forKey: "widget_prayerStatusDate")
+
+        // Tell WidgetKit to refresh
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     // MARK: - Stats

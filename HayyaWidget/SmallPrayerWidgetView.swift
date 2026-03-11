@@ -53,10 +53,18 @@ struct SmallPrayerWidgetView: View {
                 .padding(.bottom, 8)
             } else {
                 // All prayers passed
-                Text("All prayers done")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(Color(hex: 0x7FC4A0))
-                    .padding(.bottom, 8)
+                let completedCount = entry.prayerStatus.values.filter { $0 == "done" || $0 == "qadha" }.count
+                if completedCount == 5 {
+                    Text("Alhamdulillah \u{2714}")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(Color(hex: 0x7FC4A0))
+                        .padding(.bottom, 8)
+                } else {
+                    Text("All prayers done")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(Color(hex: 0x7FC4A0))
+                        .padding(.bottom, 8)
+                }
             }
 
             Spacer()
@@ -75,11 +83,22 @@ struct SmallPrayerWidgetView: View {
 
     private func prayerDot(index: Int, prayer: (name: String, time: Date, icon: String)) -> some View {
         let isNext = index == entry.nextPrayerIndex
+        let status = entry.prayerStatus[prayer.name]
+        let isCompleted = status == "done" || status == "qadha"
+        let isQadha = status == "qadha"
         let isPast = entry.nextPrayerIndex == nil || index < (entry.nextPrayerIndex ?? 0)
 
         return VStack(spacing: 3) {
             ZStack {
-                if isNext {
+                if isCompleted {
+                    // Completed — green filled (amber if qadha)
+                    Circle()
+                        .fill(isQadha ? Color(hex: 0xFFF6E3) : Color(hex: 0xEEFAF3))
+                        .frame(width: 18, height: 18)
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 7, weight: .bold))
+                        .foregroundColor(isQadha ? Color(hex: 0xE0B86B) : Color(hex: 0x7FC4A0))
+                } else if isNext {
                     // Active/next prayer — highlighted ring
                     Circle()
                         .fill(Color(hex: 0xE8F0EB))
@@ -88,13 +107,13 @@ struct SmallPrayerWidgetView: View {
                         .fill(Color(hex: 0x5B8C6F))
                         .frame(width: 8, height: 8)
                 } else if isPast {
-                    // Past prayer — filled dot (assume done)
+                    // Past prayer without check-in — missed (soft pink)
                     Circle()
-                        .fill(Color(hex: 0xEEFAF3))
+                        .fill(Color(hex: 0xFDE8EA))
                         .frame(width: 18, height: 18)
                     Circle()
-                        .fill(Color(hex: 0x7FC4A0))
-                        .frame(width: 7, height: 7)
+                        .fill(Color(hex: 0xE8878F))
+                        .frame(width: 5, height: 5)
                 } else {
                     // Future prayer — dashed outline
                     Circle()
@@ -141,6 +160,7 @@ extension Color {
             ("Isya", Calendar.current.date(bySettingHour: 19, minute: 8, second: 0, of: Date())!, "moon.stars.fill"),
         ],
         nextPrayerIndex: 2,
-        locationName: "Jakarta"
+        locationName: "Jakarta",
+        prayerStatus: ["Subuh": "done", "Dzuhur": "done"]
     )
 }

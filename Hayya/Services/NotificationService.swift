@@ -15,7 +15,15 @@ final class NotificationService {
     private let center = UNUserNotificationCenter.current()
     private let prayerTimeService = PrayerTimeService.shared
 
+    /// Cached critical alert permission status (updated on app launch).
+    var hasCriticalAlertPermissionSync: Bool = false
+
     private init() {}
+
+    /// Call on app launch to cache the critical alert permission status.
+    func refreshCriticalAlertStatus() async {
+        hasCriticalAlertPermissionSync = await hasCriticalAlertPermission()
+    }
 
     // MARK: - Permission
 
@@ -26,6 +34,26 @@ final class NotificationService {
         } catch {
             return false
         }
+    }
+
+    /// Request Critical Alerts permission for Subuh Wake-Up mode.
+    /// Critical Alerts override silent mode and DND.
+    /// Falls back to Time Sensitive if not granted.
+    func requestCriticalAlertsPermission() async -> Bool {
+        do {
+            let granted = try await center.requestAuthorization(
+                options: [.alert, .sound, .badge, .criticalAlert]
+            )
+            return granted
+        } catch {
+            return false
+        }
+    }
+
+    /// Check if Critical Alerts are authorized.
+    func hasCriticalAlertPermission() async -> Bool {
+        let settings = await center.notificationSettings()
+        return settings.criticalAlertSetting == .enabled
     }
 
     func checkPermissionStatus() async -> UNAuthorizationStatus {
@@ -86,11 +114,18 @@ final class NotificationService {
         case .moderate:
             content.sound = .default
         case .urgent:
-            content.sound = UNNotificationSound.defaultCritical
+            content.sound = .default
             content.interruptionLevel = .timeSensitive
         case .wakeUp:
-            content.sound = UNNotificationSound.defaultCritical
-            content.interruptionLevel = .critical
+            // Critical Alert for Subuh Wake-Up: overrides silent mode and DND.
+            // Falls back to Time Sensitive if Critical Alerts not granted.
+            if hasCriticalAlertPermissionSync {
+                content.sound = UNNotificationSound.defaultCritical
+                content.interruptionLevel = .critical
+            } else {
+                content.sound = .default
+                content.interruptionLevel = .timeSensitive
+            }
         }
 
         let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: alarmTime)

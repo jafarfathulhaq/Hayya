@@ -16,6 +16,7 @@ struct PrayerEntry: TimelineEntry {
     let prayers: [(name: String, time: Date, icon: String)]
     let nextPrayerIndex: Int?  // Index into prayers array, nil if all passed
     let locationName: String
+    let prayerStatus: [String: String]  // Prayer name → status raw value (from main app check-ins)
 }
 
 // MARK: - Timeline Provider
@@ -32,7 +33,8 @@ struct PrayerTimelineProvider: TimelineProvider {
                 ("Isya", Calendar.current.date(bySettingHour: 19, minute: 8, second: 0, of: Date())!, "moon.stars.fill"),
             ],
             nextPrayerIndex: 2,
-            locationName: "Jakarta"
+            locationName: "Jakarta",
+            prayerStatus: ["Subuh": "done", "Dzuhur": "done"]
         )
     }
 
@@ -82,7 +84,7 @@ struct PrayerTimelineProvider: TimelineProvider {
             date: dateComponents,
             calculationParameters: params
         ) else {
-            return PrayerEntry(date: date, prayers: [], nextPrayerIndex: nil, locationName: location.name)
+            return PrayerEntry(date: date, prayers: [], nextPrayerIndex: nil, locationName: location.name, prayerStatus: [:])
         }
 
         let prayers: [(name: String, time: Date, icon: String)] = [
@@ -102,11 +104,15 @@ struct PrayerTimelineProvider: TimelineProvider {
             }
         }
 
+        // Load check-in status from App Groups
+        let status = loadPrayerStatus()
+
         return PrayerEntry(
             date: date,
             prayers: prayers,
             nextPrayerIndex: nextIndex,
-            locationName: location.name
+            locationName: location.name,
+            prayerStatus: status
         )
     }
 
@@ -125,6 +131,21 @@ struct PrayerTimelineProvider: TimelineProvider {
 
         return (lat, lon, code, name)
     }
+
+    /// Load today's prayer check-in status from App Groups.
+    private func loadPrayerStatus() -> [String: String] {
+        let defaults = UserDefaults(suiteName: "group.com.jafarfh.hayya.shared") ?? UserDefaults.standard
+
+        // Verify the status is from today
+        let todayKey = Calendar.current.startOfDay(for: Date()).timeIntervalSince1970
+        let storedDate = defaults.double(forKey: "widget_prayerStatusDate")
+
+        guard storedDate == todayKey else {
+            return [:]  // Stale data from a previous day
+        }
+
+        return defaults.dictionary(forKey: "widget_prayerStatus") as? [String: String] ?? [:]
+    }
 }
 
 // MARK: - Widget Definition
@@ -142,5 +163,41 @@ struct HayyaPrayerWidget: Widget {
         .configurationDisplayName("Prayer Times")
         .description("Today's prayer times at a glance.")
         .supportedFamilies([.systemSmall])
+    }
+}
+
+// MARK: - Medium Widget Definition
+
+struct HayyaMediumWidget: Widget {
+    let kind = "HayyaMediumWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: PrayerTimelineProvider()) { entry in
+            MediumPrayerWidgetView(entry: entry)
+                .containerBackground(for: .widget) {
+                    Color(hex: 0xFDFBF7)
+                }
+        }
+        .configurationDisplayName("Prayer Times — Detailed")
+        .description("Prayer times with check-in status.")
+        .supportedFamilies([.systemMedium])
+    }
+}
+
+// MARK: - Large Widget Definition
+
+struct HayyaLargeWidget: Widget {
+    let kind = "HayyaLargeWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: PrayerTimelineProvider()) { entry in
+            LargePrayerWidgetView(entry: entry)
+                .containerBackground(for: .widget) {
+                    Color(hex: 0xFDFBF7)
+                }
+        }
+        .configurationDisplayName("Prayer Dashboard")
+        .description("Full prayer dashboard with next prayer and spiritual message.")
+        .supportedFamilies([.systemLarge])
     }
 }
